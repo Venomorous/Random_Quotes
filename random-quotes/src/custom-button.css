@@ -1,0 +1,10 @@
+.custom-button {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    /* margin-bottom: 10px;
+    margin-left: 10px; */
+    background-color: var(--bs-dark);
+    color: var(--bs-light);
+    /* Add any other Bootstrap variables or styles you need */
+}

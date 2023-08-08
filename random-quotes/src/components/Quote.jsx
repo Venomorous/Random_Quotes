@@ -1,9 +1,11 @@
 import React, { useState, useEffect } from "react";
 
+import "../custom-button.css";
 import Button from "./Button";
 
-function Quote() {
-    const category = "";
+function Quote({ category }) {
+    let localCategory = "";
+    category === "All" ? (localCategory = "") : (localCategory = category);
     const apiKey = import.meta.env.VITE_API_KEY;
     // const apiKey = "wcNVOA+/n5QGd51EC3HAZQ==wAu2EJ2eesTrc2UY";
     const [data, setData] = useState(null);
@@ -12,8 +14,9 @@ function Quote() {
     const fetchNewQuote = async () => {
         try {
             setIsLoading(true); // Set loading state to true before fetching
+            console.log("Category: " + localCategory);
             const response = await fetch(
-                `https://api.api-ninjas.com/v1/quotes?category=${category}`,
+                `https://api.api-ninjas.com/v1/quotes?category=${localCategory}`,
                 {
                     method: "GET",
                     headers: {
@@ -37,6 +40,9 @@ function Quote() {
     const handleNewQuote = () => {
         fetchNewQuote();
     };
+    const handleCopyClick = (quote) => {
+        navigator.clipboard.writeText(quote);
+    };
 
     useEffect(() => {
         fetchNewQuote(); // Fetch the initial quote on component mount
@@ -46,10 +52,42 @@ function Quote() {
         <div>
             {data ? (
                 <div>
-                    <div className="card" style={{ marginBottom: 10 }}>
+                    <div className="card card-lg" style={{ marginBottom: 10 }}>
                         <div className="card-body" style={{ paddingBottom: 0 }}>
-                            <p className="card-text">"{data[0].quote}"</p>
-                            <div className="text-end">
+                            <p
+                                className="card-text"
+                                style={{ fontSize: "2rem" }}
+                            >
+                                "{data[0].quote}"
+                            </p>
+                            {/* <button
+                                onClick={() => handleCopyClick(item.quote)}
+                                className="btn btn-dark btn-sm"
+                                style={{
+                                    position: "absolute",
+                                    bottom: 0,
+                                    // left: 0,
+                                }}
+                            >
+                                <span class="material-symbols-outlined">
+                                    content_copy
+                                </span>
+                            </button> */}
+                            <button
+                                onClick={() => handleCopyClick(data[0].quote)}
+                                className="btn btn-dark btn-sm custom-button mb-2 mx-2"
+                                data-bs-toggle="tooltip" // Enable tooltip
+                                data-bs-placement="top" // Position the tooltip at the top
+                                title="Copy to Clipboard" // Text for the tooltip
+                            >
+                                <span class="material-symbols-outlined">
+                                    content_copy
+                                </span>
+                            </button>
+                            <div
+                                className="text-end"
+                                style={{ fontSize: "1.2rem" }}
+                            >
                                 <p>— {data[0].author}</p>
                             </div>
                         </div>
@@ -57,9 +95,16 @@ function Quote() {
                     {/* <button onClick={handleNewQuote} disabled={isLoading}>
                         {isLoading ? "Loading..." : "Generate New Quote"}
                     </button> */}
-                    <Button onClick={handleNewQuote} disabled={isLoading}>
-                        {isLoading ? "Loading..." : "Generate New Quote"}
-                    </Button>
+                    <div className="d-grid">
+                        <Button
+                            onClick={handleNewQuote}
+                            disabled={isLoading}
+                            fontSize={"1.5rem"}
+                            color="secondary"
+                        >
+                            {isLoading ? "Loading..." : "Generate New Quote"}
+                        </Button>
+                    </div>
                 </div>
             ) : (
                 <p>Loading...</p>
@@ -69,6 +114,7 @@ function Quote() {
 }
 
 export default Quote;
+
 // import React, { useState, useEffect } from "react";
 
 // function Quote() {
